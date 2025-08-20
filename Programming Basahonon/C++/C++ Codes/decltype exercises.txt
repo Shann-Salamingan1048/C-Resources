@@ -1,0 +1,29 @@
+// written on April 18, 2025
+#include <iostream>
+#include <string>
+#include <array>
+#include <utility>
+template<typename T>
+decltype(auto) giveMeFirst(T&& arr) // T&& forwarding reference
+// or universal reference
+{
+    return std::forward<T>(arr)[0];
+}
+
+int main()
+{
+    // exercise 1
+    std::string name = "Shann";
+    decltype(auto) a = &name;
+    
+    std::cout<< *a << '\n';
+
+
+    int lol[] = {1,2,3,4,5};
+    decltype(auto) b = lol[0];
+    std::cout<< b << '\n';
+    
+    std::array<int,5> lol2 = {1,2,3,4,5};
+    std::cout<< giveMeFirst(lol2) << '\n';
+    return 0;
+}

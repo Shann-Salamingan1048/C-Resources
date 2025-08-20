@@ -1,0 +1,60 @@
+int x = 10;
+auto a = x;          // a is int
+decltype(x) b = x;   // b is int
+
+int& ref = x;
+auto c = ref;             // c is int (reference removed)
+decltype(ref) d = ref;    // d is int& (reference kept)
+
+
+
+std::vector<int> vec = {1, 2, 3};
+
+auto getAuto(std::vector<int>& v, int i) {
+    return v[i]; // returns int (a copy)
+}
+
+decltype(auto) getExact(std::vector<int>& v, int i) {
+    return v[i]; // returns int& (the real thing)
+}
+
+template<typename Container, typename Index>
+auto authAndAccess(Container& c, Index i)
+    -> decltype(c[i])  // Return exactly what c[i] returns (including reference)
+{
+    authenticateUser();
+    return c[i];
+}
+
+template<typename T>
+decltype(auto) getItem(T& container, int index) {
+    return container[index];  // same as above, but shorter
+}
+/*
+	decltype(...) is still needed when:
+     1. You want to inspect a type, like in a typedef, using, or static assert
+     2. You cant use auto, like in function pointer declarations or type aliases
+
+Example:
+    decltype(container[i]) value = container[i];
+
+this is valid and needed when youre not using auto.
+
+	When to Use decltype(auto):
+     1. You want to preserve reference-ness and const
+     2. You are returning an expression from a function
+     3. You are assigning from a possibly-referenced variable
+     4. You're writing generic/template code
+	
+	Dont use decltype(auto) when:
+     1. You want a copy intentionally
+     2. You want simple, clean code and don't care about references or const
+     3. You're initializing with a complex expression and don't want surprises
+
+
+	Use auto when:
+     1. You want to copy something or you want a copy
+     2. Clean code and readable 
+
+
+*/

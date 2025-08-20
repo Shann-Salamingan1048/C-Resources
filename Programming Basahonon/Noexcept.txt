@@ -1,0 +1,14 @@
+#include <iostream>
+constexpr void nonThrowingFunction() noexcept  // use noexcept if you know that the function is not throwing exception to imporve performance
+{
+  std::cout << "Hello World\n";
+}
+
+
+int main() 
+{
+  constexpr auto noThrow = noexcept(nonThrowingFunction()); // boolean, check if it is truly noexcept
+  std::cout << noThrow << "\n";
+  nonThrowingFunction();
+  return 0;
+}

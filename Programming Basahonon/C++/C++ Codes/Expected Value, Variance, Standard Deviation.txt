@@ -1,0 +1,54 @@
+#include <array>
+#include <iostream>
+// --- Written on April 15, 2025 --- 
+// --- Compile-time sqrt ---
+constexpr double sqrt_constexpr(double x, double guess = 1.0, double epsilon = 1e-10)
+{
+    // --- Newton-Raphson iteration ---
+    return (guess * guess - x > epsilon || x - guess * guess > epsilon)
+        ? sqrt_constexpr(x, 0.5 * (guess + x / guess), epsilon)
+        : guess;
+}
+
+// --- Expected Value ---
+template<std::size_t N> // automatically deduce or put the size of the constant array
+constexpr double expected_value(const std::array<double, N>& probs) 
+{
+    double sum = 0;
+    for (std::size_t i = 0; i < N; ++i) {
+        sum += i * probs[i];
+    }
+    return sum;
+}
+
+// --- Variance ---
+template<std::size_t N> // automatically deduce or put the size of the constant array
+constexpr double variance(const std::array<double, N>& probs) 
+{
+    const double mean = expected_value(probs);
+    double var_sum = 0;
+    for (std::size_t i = 0; i < N; ++i) {
+        var_sum += ((i - mean) * (i - mean)) * probs[i];
+    }
+    return var_sum;
+}
+
+// --- Standard Deviation ---
+template<std::size_t N> // automatically deduce or put the size of the constant array
+constexpr double standard_deviation(const std::array<double, N>& probs) 
+{
+    return sqrt_constexpr(variance(probs));
+}
+
+// --- Data ---
+// constexpr std::array<double, 6> probs = {0.06, 0.58, 0.22, 0.10, 0.03, 0.01};
+constexpr std::array<double, 4> probs = {1.0/8.0,3.0/8.0,3.0/8.0,1.0/8};
+constexpr double var = variance(probs);
+constexpr double std_dev = standard_deviation(probs);
+
+int main() 
+{
+    std::cout << "Variance: " << var << '\n';
+    std::cout << "Standard Deviation: " << std_dev << '\n';
+    return 0;
+}

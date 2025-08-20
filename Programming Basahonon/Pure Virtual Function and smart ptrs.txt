@@ -1,0 +1,82 @@
+
+#include <iostream>
+#include <vector> 
+#include <memory>
+class Base
+{
+  public:
+    virtual void Show() = 0; // no implementation
+    // this means a pure virtual function
+    // if you do "virtual void Show();" it will error.
+    // do this only if you have nothing to put it in default and you want custom modification
+    // you cannot instantiate it like Base::Show()
+    virtual ~Base() = default;
+};
+class Derived : public Base
+{
+  public:
+    void Show() override
+    {
+      //Base::Show(); // like this kind of instantiation
+      std::cout << "Derived 1\n";
+    }
+};
+
+class Derived2 : public Base
+{
+  public:
+    void Show() override
+    {
+      std::cout << "Derived 2\n";
+      std::cout << "Derived 2.2\n";
+    }
+    
+};
+
+class DerivedDot2 : public Base // just ignore this
+{
+public:
+    virtual void Show() override
+    {
+        std::cout << "DerivedDot2\n";
+       // Base::Show(); // Call base class implementation if needed
+    }
+};
+
+int main()
+{
+  /*
+    std::unique_ptr<Base> b1 = std::make_unique<Derived>();
+    std::unique_ptr<Base> b2 = std::make_unique<Derived2>();
+    //std::unique_ptr<Base> b3 = std::make_unique<DerivedDot2>();
+    std::vector<std::unique_ptr<Base>> arr;
+    arr.push_back(std::move(b1));
+    arr.push_back(std::move(b2));
+    
+    
+    or 
+    std::vector<std::unique_ptr<Base>> arr;
+    arr.push_back(std::make_unique<Derived>());
+    arr.push_back(std::make_unique<Derived2>());
+
+  */
+    /* OR
+      std::vector<std::shared_ptr<Base>> arr;
+      arr.push_back(std::make_shared<Derived>());
+      arr.push_back(std::make_shared<Derived2>());
+    */
+    
+    std::vector<std::unique_ptr<Base>> arr;
+    arr.push_back(std::make_unique<Derived>());
+    arr.push_back(std::make_unique<Derived2>());
+
+    for(const auto& i : arr)
+    {
+      i->Show();
+    }
+    // ignore
+    DerivedDot2 der2;
+    der2.Show();
+   
+    return 0;
+}

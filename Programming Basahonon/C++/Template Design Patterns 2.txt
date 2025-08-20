@@ -1,0 +1,86 @@
+#include <vector>
+#include <iostream>
+#include <utility>
+
+template<typename T> 
+T half(T x)
+{
+  return x / 2;
+}
+
+template <typename T>
+T decrement (T* p)
+{
+  return --(*p);
+}
+
+template<typename T> 
+T first(const std::vector<T>& v)
+{
+  return v[0];
+}
+
+template <typename U, typename V>
+auto swap12(const std::pair<U, V>& x)
+{
+  return std::make_pair(x.second, x.first);
+}
+
+template <typename T> 
+auto swap12_2(const T& x)
+{
+  return std::make_pair(x.second, x.first);
+}
+/* Examples
+    auto x = half(8);
+    auto y = half(2.5);
+    std::cout << x << '\n';
+    std::cout << y << '\n';
+
+    auto z = half<long>(8);
+    std::cout << z << '\n';
+
+    int i = 6;
+    std::cout << decrement(&i) << '\n';
+
+    std::vector<int> v{11, 25, 67};
+    std::cout << first(v) << '\n';
+
+    auto pair1 = swap12(std::make_pair(7, 4.2));
+    std::cout << pair1.first << ", " << pair1.second << '\n';
+
+    auto pair2 = swap12_2(std::make_pair(7, 4.2));
+    std::cout << pair2.first << ", " << pair2.second << '\n';
+    
+    */
+// Class template
+template <typename N, typename D> 
+class Ratio
+{
+  public:
+    Ratio() : num_(), denom_() {}
+    Ratio(const N& num, const D& denom) 
+      : num_(num), denom_(denom) {}
+      
+    explicit operator double() const
+    {
+      return static_cast<double>(num_)/static_cast<double>(denom_);
+    }
+  private:
+    N num_;
+    D denom_;
+};
+template<typename N, typename D>
+Ratio<N, D> make_ratio(const N& num, const D& denom)
+{
+  return {num, denom};
+}
+int main()
+{
+    Ratio<int, double> r;
+    Ratio r2(5, 0.1);
+    Ratio<int, double> r3(12,0.6);
+    
+    auto r4(make_ratio(9,0.2));
+    return 0;
+}

@@ -1,0 +1,132 @@
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <cmath>
+constexpr uint8_t columnWidth = 20;
+// constexpr replacement for std::round
+constexpr double rounds(double number) noexcept
+{
+    return static_cast<int>(number * 1000.0 + (number >= 0 ? 0.5 : -0.5)) / 1000.0;
+}
+
+constexpr double f(double x) noexcept
+{
+    return static_cast<double>(rounds((x * x) - (4 * x) + 4));
+}
+
+
+constexpr double round4(double number) noexcept
+{
+    return static_cast<int>(number * 10000.0 + (number >= 0 ? 0.5 : -0.5)) / 10000.0;
+}
+
+constexpr double round6(double number) noexcept
+{
+    return static_cast<int>(number * 1000000.0 + (number >= 0 ? 0.5 : -0.5)) / 1000000.0;
+}
+
+/*constexpr double f2(double x) noexcept
+{
+    return static_cast<float>(round6( (x * x * x) - (4 * x) - 9));
+}*/
+constexpr float f2(double x) noexcept
+{
+    return static_cast<float>(round4( (x * x * x * x) - (4 * x) + 4));
+}
+
+
+constexpr double half(const double (&intervals)[2]) noexcept
+{
+    return static_cast<double>(round4( (intervals[0] + intervals[1]) / 2));
+}
+void bisectionMethod(uint8_t iteration)
+{
+    double intervals[2] = {1,4}; // a , b
+    double negaSide, posSide;
+    
+    double tempA = f2(intervals[0]);
+    double tempB = f2(intervals[1]);
+    
+    double X, fx;
+     
+    size_t posiIndex = 0;
+    size_t negaIndex = 1;
+    
+    if(tempA < tempB)
+    {
+        posiIndex = 1;
+        negaIndex = 0;
+    }
+    //std::cout << std::fixed << std::setprecision(6); // Set precision for output
+    std::cout << "Bisection Method\n\n";
+    std::cout << std::left << std::setw(columnWidth) << "Iteration" << std::setw(columnWidth) << "X" << std::setw(columnWidth) 
+        << "a" << std::setw(columnWidth) << "b" << std::setw(columnWidth) << "f(x)" << '\n';
+    for(size_t i = 0; i <= iteration; ++i)
+    {
+        X = half(intervals);
+        fx = f2(X);
+        if(fx > 0)
+        {
+            intervals[posiIndex] = X; 
+            std::cout << std::left << std::setw(columnWidth) << i << std::setw(columnWidth) << X << std::setw(columnWidth) 
+            << intervals[0] << std::setw(columnWidth) << intervals[1] << std::setw(columnWidth) << fx << '\n';
+            
+        }
+        else
+        {
+            intervals[negaIndex] = X; 
+            std::cout << std::left << std::setw(columnWidth) << i << std::setw(columnWidth) << X << std::setw(columnWidth) 
+            << intervals[0] << std::setw(columnWidth) << intervals[1] << std::setw(columnWidth) << fx << '\n';
+        }
+        
+    }
+    std::cout << "\n\n\n";
+}
+void secantMethod(uint8_t iteration)
+{
+    
+    double x0 = 1, x1 = 2.5, x2;
+    double tol = 0.00001;
+    
+    std::cout << "Secant Method\n\n";
+    std::cout << std::left << std::setw(columnWidth) << "Iteration" << std::setw(columnWidth) << "X"
+    << std::setw(columnWidth) << "f(X)" << '\n';
+
+    // Print Iteration 0 and 1 (initial values)
+    std::cout << std::left << std::setw(columnWidth) << 0 << std::setw(columnWidth) << x0 << std::setw(columnWidth) << f(x0) << '\n';
+    std::cout << std::left << std::setw(columnWidth) << 1 << std::setw(columnWidth) << x1 << std::setw(columnWidth) << f(x1) << '\n';
+
+    for (size_t i = 2; i <= iteration; ++i)
+    {
+        double f0 = f(x0);
+        double f1 = f(x1);
+
+        if (f1 - f0 == 0)
+        {
+            std::cout << "Division by zero detected.\n";
+            break;
+        }
+
+        x2 = rounds(x1 - f1 * (x1 - x0) / (f1 - f0));
+        double fx2 = rounds(f(x2));
+
+        std::cout << std::left << std::setw(columnWidth) << i << std::setw(columnWidth) << x2 << std::setw(columnWidth) << fx2 << "\n";
+
+        if (std::fabs(x2 - x1) < tol)
+        {
+            std::cout << "Root found: " << x2 << "\n";
+            break;
+        }
+
+        x0 = x1;
+        x1 = x2;
+    }
+}
+
+int main()
+{
+    bisectionMethod(8);
+    secantMethod(100);
+
+    return 0;
+}

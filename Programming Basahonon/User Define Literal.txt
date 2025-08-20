@@ -1,0 +1,47 @@
+#include <iostream>
+#include <concepts>
+#include <cstdint>
+#include <string>
+// Define a concept to check if a type is numeric
+template<typename T>
+concept Numeric = std::integral<T> || std::floating_point<T>;
+
+constexpr auto multiple(const Numeric auto x, const Numeric auto y) 
+{
+    return x * y;
+}
+constexpr unsigned long long fac(const uint16_t x)
+{
+    return x > 1 ? x * fac(x - 1) : 1;
+}
+struct length
+{
+    long double value;
+    const std::string unit;
+    explicit constexpr length(long double v, const std::string& u) : value(v), unit(u){}
+};
+constexpr length operator"" _m(long double val) // user define literals
+{
+    return length(val, "meter");
+};
+constexpr length operator"" _km(long double val) 
+{
+    return length(val * 1000.0, "kilometer");
+};
+int main()
+{
+    length l1 = 1.5_m;
+    length l2 = 1.5_km;
+    constexpr auto factorial = fac(10);
+    constexpr int k = 10;
+    auto square = [](int x){return x * x;};
+    auto multiply = [k](int x){return k * x;};
+    std::cout << square(12) << "\n" << multiply(12);
+    std::cout << "\n" << multiple(12, 19.2);
+    std::cout << "\n" << multiple(10, 192);
+    std::cout << "\n" << factorial;
+    std::cout << "\n" << l1.value << " " << l1.unit;
+    std::cout << "\n" << l2.value << " " << l2.unit;
+
+    return 0;
+}

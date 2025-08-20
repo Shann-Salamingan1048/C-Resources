@@ -1,0 +1,77 @@
+#include <iostream>
+#include <memory>
+#include <vector>
+#include <string>
+
+class Vehicle
+{
+private:
+    std::string Model;
+    std::string Brand;
+    unsigned short Year;
+    std::string TypeVehicle;
+    static int Count; // Static member variable for automatic numbering
+    int Number;       // Instance-specific number
+
+public:
+    Vehicle(const std::string& model, const std::string& brand, unsigned short year, const std::string& typeVehicle)
+        : Model(model), Brand(brand), Year(year), TypeVehicle(typeVehicle), Number(++Count)
+    {
+    }
+
+    virtual ~Vehicle() = default; // Virtual destructor for proper cleanup
+
+    const virtual void DisplayInfo() const noexcept
+    {
+        std::cout << "No. " << Number << "\n";
+        std::cout << "Type of Vehicle: " << TypeVehicle << "\nModel: " << Model << "\nBrand: " << Brand << "\nYear: " << Year << "\n";
+    }
+};
+
+// Initialize the static member variable outside the class definition
+int Vehicle::Count = 0;
+
+class Car final : public Vehicle // can not be inherited due to the final
+{
+public:
+    Car(const std::string& model, const std::string& brand, unsigned short year)
+        : Vehicle(model, brand, year, "Car") {}
+
+    const void DisplayInfo() const noexcept override
+    {
+        Vehicle::DisplayInfo();
+    }
+};
+
+class Motorcycle final : public Vehicle // can not be inherited due to the final
+{
+public:
+    Motorcycle(const std::string& model, const std::string& brand, unsigned short year)
+        : Vehicle(model, brand, year, "Motorcycle") {}
+
+    const void DisplayInfo() const noexcept override
+    {
+        //std::cout << "lol\n";
+        Vehicle::DisplayInfo();
+    }
+};  
+
+int main()
+{
+    std::unique_ptr<Vehicle> c1 = std::make_unique<Car>("1XDL", "Toyota", 2024);
+    std::unique_ptr<Vehicle> m1 = std::make_unique<Motorcycle>("XLTR", "Mitsubishi", 2012);
+    std::unique_ptr<Vehicle> m2 = std::make_unique<Motorcycle>("M200LX", "Ford", 2023);
+    
+    std::vector<std::unique_ptr<Vehicle>> arr;
+    arr.push_back(std::move(c1));
+    arr.push_back(std::move(m1));
+    arr.push_back(std::move(m2));
+    
+    for (const auto& vehicle : arr)
+    {
+        vehicle->DisplayInfo();
+        std::cout << "\n";
+    }
+
+    return 0;
+}

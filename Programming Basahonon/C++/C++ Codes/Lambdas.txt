@@ -1,0 +1,30 @@
+#include <vector>
+#include <iostream>
+#include <algorithm> 
+#include <string>
+int main()
+{
+    auto sumsSquare = [](auto a, auto b) { return (a * a) + (b * b); };
+    std::cout << sumsSquare(2, 5) << '\n'; // 29
+    
+    
+    std::vector<int> v = {1,2,3,4,5,6};
+    auto isOdd =  std::remove_if(v.begin(), v.end(),[](auto i){ return (i % 2 == 1); });
+    
+    v.erase(isOdd,v.end());
+    
+    for(const auto& i : v)
+        std::cout << i << ' ';
+    std::cout << '\n';
+    
+    std::vector<std::string> v_str = {"Shann", "Delfin", "Binoy","Caturla", "Salamingan", "III"};
+    auto decendingOrder = [](std::string i, std::string j) {return (i.size() > j.size());};
+    
+    std::sort(v_str.begin(), v_str.end(), decendingOrder);
+    
+    for(const auto& i : v_str)
+        std::cout << i << ' ';
+    std::cout << '\n';
+    
+    return 0;
+}

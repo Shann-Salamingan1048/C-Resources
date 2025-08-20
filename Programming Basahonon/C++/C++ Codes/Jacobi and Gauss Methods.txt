@@ -1,0 +1,112 @@
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+#include <algorithm>
+
+double roundToFourDecimalPlaces(double number) noexcept
+{
+    return std::round(number * 10000.0) / 10000.0;
+}
+
+double X1(double x2, double x3) noexcept
+{
+    return roundToFourDecimalPlaces((2 + x2 - x3) / 3.0);
+}
+
+double X2(double x1, double x3) noexcept
+{
+    return roundToFourDecimalPlaces((-1 * (7 - 2 * x1 + x3)) / 3.0);
+}
+
+double X3(double x1, double x2) noexcept
+{
+    return roundToFourDecimalPlaces((5 - 3 * x1 + x2) / 4.0);
+}
+
+void jacobi(int iteration)
+{
+    int columnWidth = 12;
+    double x1 = 0.0, x2 = 0.0, x3 = 0.0;
+    double leastError = 0.0;
+
+    std::cout << "\nJacobi Method\n";
+    std::cout << std::setw(columnWidth) << "Iter"
+              << std::setw(columnWidth) << "x1"
+              << std::setw(columnWidth) << "x2"
+              << std::setw(columnWidth) << "x3" << '\n';
+
+    for(size_t i = 1; i <= iteration; ++i)
+    {
+        const auto tempX1 = X1(x2, x3);
+        const auto tempX2 = X2(x1, x3);
+        const auto tempX3 = X3(x1, x2);
+
+        if(i == iteration)
+        {
+            leastError = std::min({
+                std::abs(tempX1 - x1),
+                std::abs(tempX2 - x2),
+                std::abs(tempX3 - x3)
+            });
+        }
+
+        x1 = tempX1;
+        x2 = tempX2;
+        x3 = tempX3;
+
+        std::cout << std::setw(columnWidth) << i
+                  << std::setw(columnWidth) << x1
+                  << std::setw(columnWidth) << x2
+                  << std::setw(columnWidth) << x3 << '\n';
+    }
+
+    std::cout << "Least Approximation Error (max diff): " << leastError << '\n';
+}
+
+void gauss(int iteration)
+{
+    int columnWidth = 12;
+    double x1 = 0.0, x2 = 0.0, x3 = 0.0;
+    double leastError = 0.0;
+
+    std::cout << "\nGauss-Seidel Method\n";
+    std::cout << std::setw(columnWidth) << "Iter"
+              << std::setw(columnWidth) << "x1"
+              << std::setw(columnWidth) << "x2"
+              << std::setw(columnWidth) << "x3" << '\n';
+
+    for(size_t i = 1; i <= iteration; ++i)
+    {
+        const auto prevX1 = x1;
+        const auto prevX2 = x2;
+        const auto prevX3 = x3;
+
+        x1 = X1(x2, x3);
+        x2 = X2(x1, x3);
+        x3 = X3(x1, x2);
+
+        if(i == iteration)
+        {
+            leastError = std::min({
+                std::abs(x1 - prevX1),
+                std::abs(x2 - prevX2),
+                std::abs(x3 - prevX3)
+            });
+        }
+
+        std::cout << std::setw(columnWidth) << i
+                  << std::setw(columnWidth) << x1
+                  << std::setw(columnWidth) << x2
+                  << std::setw(columnWidth) << x3 << '\n';
+    }
+
+    std::cout << "Least Approximation Error (max diff): " << leastError << '\n';
+}
+
+int main()
+{
+    jacobi(12);
+    gauss(10);
+
+    return 0;
+}

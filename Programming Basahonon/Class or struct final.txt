@@ -1,0 +1,19 @@
+#include <iostream>
+struct Point final // prevent it from being inherited and provide optimization
+{
+  long double x,y,z;
+  
+};
+
+int main() 
+{
+ Point p;
+ p.x = 10;
+ p.y = 10;
+ p.z = 10;
+ 
+ 
+ std::cout << p.x << " " << p.y << " " << p.z << "\n";
+ 
+  return 0;
+}

@@ -1,0 +1,23 @@
+#include <iostream>
+
+class Point {
+public:
+    long double x, y, z;
+
+    // Constructor without explicit allows implicit conversion
+    explicit Point(long double value) : x(value), y(value), z(value) {}
+};
+
+void displayPoint(const Point& p) {
+    std::cout << "Point(" << p.x << ", " << p.y << ", " << p.z << ")\n";
+}
+
+int main() {
+    //Point p1 = 10;  // Implicit conversion from long double to Point
+    Point p1(10); // explicit
+    
+    std::cout << p1.x << " " << p1.y << " " << p1.z << "\n";
+    //displayPoint(20);  // Implicit conversion from long double to Point
+
+    return 0;
+}

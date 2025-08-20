@@ -1,0 +1,84 @@
+#include <memory>
+#include <vector>
+#include <iostream>
+
+
+
+
+// Templates
+template <typename T>
+T increment(T x)
+{
+  return x + 1;
+}
+
+template <typename T> 
+T sum(T from, T to, T step)
+{
+  T res = from;
+  while((from += step) < to)
+  {
+    res += from;
+  }
+  return res;
+  
+}
+
+
+template <typename T> 
+void f(T t);
+// use auto equal to template but depends on the compiler if it is okay
+void f(auto t);
+void f(std::vector<auto>& v);
+
+// Example 1
+template <typename T> 
+class ArrayOf2
+{
+  private:
+    T a_[2];
+  public:
+    T& operator[] (size_t i)
+    {
+      return a_[i];
+    }
+    const T& operator[](size_t i) const 
+    {
+      return a_[i];
+    }
+    
+    T sum() const
+    {
+      return a_[0] + a_[1];
+    }
+    /*ArrayOf2<int> i; 
+    i[0] = 1;
+    i[1] = 5;
+    std::cout << i.sum() << '\n';
+    
+    ArrayOf2<double> x;
+    x[0] = -3.5;
+    x[1] = 4;
+    std::cout << x.sum() << '\n';
+    
+    ArrayOf2<char*> c;
+    char s[] = "Hello";
+    c[0] = s;
+    c[1] = s + 2;*/
+    
+};
+// Example
+template <typename T> 
+constexpr T pi = T(3.14159265358979323846264338327950288419716939937510582097494459230781L);
+    /*std::cout << pi<float> << '\n';      
+    std::cout << pi<double> << '\n';*/
+
+
+
+
+int main()
+{
+    
+    
+    return 0;
+}
